@@ -106,17 +106,20 @@
                     angular.forEach(pages, function (page) {
                         var element = angular.element(page);
                         var pageNum = element.data('page-number');
+
+                        var canvasWrapper = angular.element(element[0].querySelectorAll('.canvasWrapper'));
+                        if(element.attr('data-loaded') === 'true' && canvasWrapper.attr('annot-loaded') != 'done'){
+                            var el = $compile('<canvas class="annotation" id="annot_canvas_' + element.attr('data-page-number') + '" resize draw style="width:' + canvasWrapper.css('width') +';height:' + canvasWrapper.css('height') +';" width="' + canvasWrapper[0].offsetWidth + '" height="' + canvasWrapper[0].offsetHeight + '"></canvas>')($scope);
+                            canvasWrapper.prepend(el);
+                            canvasWrapper.attr('annot-loaded', 'done');
+                        }
+
                         if (!element.data('loaded')) {
-                            var canvasWrapper = angular.element(element[0].querySelectorAll('.canvasWrapper'));
-                            if(canvasWrapper.attr('annot-loaded') != 'done' && canvasWrapper.length != 0){
-                                var el = $compile('<canvas class="annotation" id="annot_canvas_' + element.attr('data-page-number') + '" resize draw style="width:' + canvasWrapper.css('width') +';height:' + canvasWrapper.css('height') +';" width="' + canvasWrapper[0].offsetWidth + '" height="' + canvasWrapper[0].offsetHeight + '"></canvas>')($scope);
-                                canvasWrapper.prepend(el);
-                                canvasWrapper.attr('annot-loaded', 'done');
-                            }
                             delete loaded[pageNum];
                             return;
                         }
-                        
+
+
                         if (pageNum in loaded) return;
 
                         if (!initialised) onPdfInit();
