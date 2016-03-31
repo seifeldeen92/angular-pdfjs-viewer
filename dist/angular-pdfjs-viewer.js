@@ -57,7 +57,7 @@
         }
     }]);
     
-    module.directive('pdfjsViewer', ['$interval', function ($interval) {
+    module.directive('pdfjsViewer', ['$interval','$compile', function ($interval,$compile) {
         return {
             template: '<div id="outerContainer">\n' +
 '\n' +
@@ -359,11 +359,11 @@
                 
                 var initialised = false;
                 var loaded = {};
+                var annotLoaded = {};
                 var numLoaded = 0;
 
                 function onPdfInit() {
                     initialised = true;
-                    
                     if ($attrs.removeMouseListeners === "true") {
                         window.removeEventListener('DOMMouseScroll', handleMouseWheel);
                         window.removeEventListener('mousewheel', handleMouseWheel);
@@ -382,7 +382,7 @@
                     if (pdfViewer) {
                         if ($scope.scale !== pdfViewer.currentScale) {
                             loaded = {};
-                            numLoaded = 0;
+                             numLoaded = 0;
                             $scope.scale = pdfViewer.currentScale;
                         }
                     } else {
@@ -390,11 +390,17 @@
                     }
                     
                     var pages = document.querySelectorAll('.page');
+
                     angular.forEach(pages, function (page) {
                         var element = angular.element(page);
                         var pageNum = element.data('page-number');
-                        
                         if (!element.data('loaded')) {
+                            var canvasWrapper = angular.element(element[0].querySelectorAll('.canvasWrapper'));
+                            if(canvasWrapper.attr('annot-loaded') != 'done' && canvasWrapper.length != 0){
+                                var el = $compile('<canvas class="annotation" id="annot_canvas_' + element.attr('data-page-number') + '" resize draw style="width:' + canvasWrapper.css('width') +';height:' + canvasWrapper.css('height') +';" width="' + canvasWrapper[0].offsetWidth + '" height="' + canvasWrapper[0].offsetHeight + '"></canvas>')($scope);
+                                canvasWrapper.prepend(el);
+                                canvasWrapper.attr('annot-loaded', 'done');
+                            }
                             delete loaded[pageNum];
                             return;
                         }

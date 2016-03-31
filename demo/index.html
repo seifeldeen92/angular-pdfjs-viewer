@@ -10,6 +10,8 @@
         <link rel="stylesheet" href="vendor/pdf.js-viewer/viewer.css">
 
         <script src="/vendor/angular/angular.js"></script>
+        <script src="/vendor/angular-sanitize/angular-sanitize.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/paper.js/0.9.18/paper-full.min.js"></script>
         <script src="/angular-pdfjs-viewer.js"></script>
         <script src="app.js"></script>
 
@@ -25,9 +27,19 @@
             width: 100%;
             height: 100%;
           }
+          .pdfjs .pdfViewer .page canvas {
+              margin: 0;
+              display: block;
+              position: absolute;
+              top: 0;
+          }
+          .pdfjs .pdfViewer .page canvas.annotation{
+            z-index: 1;
+          }
         </style>
     </head>
     <body>
+    <!-- <canvas id="mycanvas" resize draw></canvas> -->
         <div class='some-pdf-container'>
             <pdfjs-viewer src="{{ pdf.src }}" download="true" print="false" open="false"
             cmap-dir="vendor/pdf.js-viewer/cmaps" image-dir="vendor/pdf.js-viewer/images"></pdfjs-viewer>
