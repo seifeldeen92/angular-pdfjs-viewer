@@ -397,10 +397,11 @@
 
                         var canvasWrapper = angular.element(element[0].querySelectorAll('.canvasWrapper'));
                         if(element.attr('data-loaded') === 'true' && canvasWrapper.attr('annot-loaded') != 'done'){
-                            var el = $compile('<canvas class="annotation" id="annot_canvas_' + element.attr('data-page-number') + '" resize draw style="width:' + canvasWrapper.css('width') +';height:' + canvasWrapper.css('height') +';" width="' + canvasWrapper[0].offsetWidth + '" height="' + canvasWrapper[0].offsetHeight + '"></canvas>')($scope);
+                            var el = $compile('<div pagenum="' + element.attr('data-page-number') + '" id="annotation'+ element.attr('data-page-number') +'" width="' + canvasWrapper[0].offsetWidth + '" height="' + canvasWrapper[0].offsetHeight + '" class="annotation" annotation></div>')($scope);
                             canvasWrapper.prepend(el);
                             canvasWrapper.attr('annot-loaded', 'done');
                         }
+
 
                         if (!element.data('loaded')) {
                             delete loaded[pageNum];
